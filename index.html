@@ -37,6 +37,8 @@
                 let secret = "DH{";
 
                 for (let i = 3; i < secret_length; i++) {
+                    let found = false;
+
                     for (let c of chars) {
                         if (await search(secret + c)) {
                             secret += c;
@@ -44,8 +46,14 @@
                                 mode: 'no-cors'
                             });
                             console.log(`found: ${secret}`);
+                            found = true;
                             break;
                         }
+                    }
+
+                    if (!found) {
+                        console.error(`Character not found for position ${i}`);
+                        break;
                     }
                 }
             }
