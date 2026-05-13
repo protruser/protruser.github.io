@@ -36,7 +36,7 @@
                 let secret_length = 36;
                 let secret = "DH{";
 
-                for (let i = 0; i < secret_length; i++) {
+                for (let i = 3; i < secret_length; i++) {
                     for (let c of chars) {
                         if (await search(secret + c)) {
                             secret += c;
