@@ -19,7 +19,7 @@
                     document.body.appendChild(ifr);
 
                     ifr.onload = () => {
-                        const found = ifr.contentWindow.length > 0;
+                        const found = ifr.contentWindow.frames.length > 0;
                         document.body.removeChild(ifr);
                         resolve(found);
                     }
