@@ -7,15 +7,20 @@
 </head>
 <body>
     <h1>
-        response>
+        <div id="result-box"></div>
     </h1>
     <script>
         fetch("http://host3.dreamhack.games:14995/validation?url=0.0.0.0:3333/admin", {
             method: 'GET',
             'refer': '192.168.0.1'
-        }). then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('에러: ', error))
+        }).then(htmlString => {
+            const parser = new DOMParser();
+            const doc = parser.parseFormString(htmlString, 'text/html');
+
+            const resValue = doc.querySelector('#result-box').textContent;
+
+            console.log(resValue);
+        })
     </script>
 </body>
 </html>
