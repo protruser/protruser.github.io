@@ -13,13 +13,25 @@
         fetch("http://host3.dreamhack.games:14995/validation?url=0.0.0.0:3333/admin", {
             method: 'GET',
             'refer': '192.168.0.1'
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("네트워크 응답 실패");
+            }
+            return response.text()
         }).then(htmlString => {
             const parser = new DOMParser();
-            const doc = parser.parseFormString(htmlString, 'text/html');
+            const doc = parser.parseFromString(htmlString, 'text/html');
 
-            const resValue = doc.querySelector('#result-box').textContent;
+            const targetElement = doc.querySelector('#result-box');
 
-            console.log(resValue);
+            if (targetElement) {
+                const resValue = targetElement.textContent;
+                console.log(resValue);
+
+                document.getElementById("result-box").textContent = resValue;
+            } else {
+                console.log(htmlString);
+            }
         })
     </script>
 </body>
