@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>
+        response>
+    </h1>
+    <script>
+        fetch("http://host3.dreamhack.games:14995/validation?url=0.0.0.0:3333/admin", {
+            method: 'GET',
+            'refer': '192.168.0.1'
+        }). then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('에러: ', error))
+    </script>
+</body>
+</html>
