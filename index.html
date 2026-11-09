@@ -3,209 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Security Projects</title>
-    <meta name="description" content="AWS 보안 관련 프로젝트 모음 — Infra, Attack, Service, Lab">
+    <title>모의해킹 결과 보고 · Team Ode</title>
+    <meta name="description" content="주요정보통신기반시설 가이드 2026 기준 Web Application 취약점 진단 및 모의침투 결과">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
     <style>
         :root {
-            --bg: #f4f6fb;
-            --bg-grad-1: rgba(255,153,0,0.10);
-            --bg-grad-2: rgba(77,159,255,0.10);
-            --card: #ffffff;
-            --border: #e2e7f0;
-            --border-hover: #ff9900;
-            --text: #1b2435;
-            --muted: #64718c;
-            --accent: #e87b00;
-            --aws-blue: #2d7ff0;
+            --paper: #ffffff;
+            --bg: #f6f7f9;
+            --ink: #14181f;
+            --muted: #697487;
+            --faint: #9aa4b4;
+            --line: #e4e7ec;
+            --line-strong: #d4d9e1;
+            --accent: #9a1c2b;
+            --accent-soft: #f6ebec;
+            --hover: #fbfafa;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-text-size-adjust: 100%; }
         body {
-            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Malgun Gothic", sans-serif;
-            background:
-                radial-gradient(1100px 500px at 85% -10%, var(--bg-grad-1), transparent 60%),
-                radial-gradient(900px 450px at 0% 110%, var(--bg-grad-2), transparent 55%),
-                var(--bg);
-            color: var(--text);
-            min-height: 100vh;
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--ink);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            font-feature-settings: "tnum";
         }
-        .wrap {
-            max-width: 780px;
+
+        /* 상단 바 */
+        .topbar {
+            border-bottom: 1px solid var(--line);
+            background: var(--paper);
+        }
+        .topbar-inner {
+            max-width: 920px;
             margin: 0 auto;
-            padding: 72px 24px 96px;
-        }
-        header { margin-bottom: 44px; }
-        .badge {
-            display: inline-flex;
+            padding: 16px 32px;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--accent);
-            border: 1px solid var(--border);
-            background: rgba(255,153,0,0.08);
-            padding: 6px 14px;
-            border-radius: 999px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            gap: 16px;
         }
-        .badge::before {
-            content: "";
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 8px rgba(232,123,0,0.6);
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.86rem;
+        }
+        .brand .org {
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+        .brand .div { width: 1px; height: 13px; background: var(--line-strong); }
+        .brand .doc { color: var(--muted); }
+        .conf {
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 3px;
+            padding: 3px 8px;
+            white-space: nowrap;
+        }
+
+        .wrap {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 64px 32px 88px;
+        }
+
+        /* 히어로 */
+        .eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 16px;
         }
         h1 {
-            font-size: clamp(1.9rem, 5vw, 2.8rem);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             font-weight: 800;
             letter-spacing: -0.02em;
-            margin-bottom: 12px;
+            line-height: 1.25;
+            margin-bottom: 18px;
         }
-        h1 .hl { color: var(--accent); }
         .subtitle {
             color: var(--muted);
-            font-size: clamp(0.98rem, 2.2vw, 1.1rem);
-            max-width: 560px;
+            font-size: 1.02rem;
+            max-width: 670px;
         }
-        .list {
+
+        /* 메타 정보 */
+        .meta {
+            margin-top: 34px;
+            padding-top: 26px;
+            border-top: 1px solid var(--line);
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px 32px;
+        }
+        .meta dt {
+            font-size: 0.74rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-bottom: 5px;
+        }
+        .meta dd {
+            font-size: 0.94rem;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        /* 자료 섹션 */
+        .section-head {
+            margin: 56px 0 18px;
             display: flex;
-            flex-direction: column;
-            gap: 14px;
+            align-items: baseline;
+            justify-content: space-between;
         }
-        .row {
+        .section-head h2 {
+            font-size: 0.82rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 700;
+        }
+        .section-head .count {
+            font-size: 0.8rem;
+            color: var(--faint);
+        }
+
+        .docs {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .doc-row {
             display: flex;
             align-items: center;
-            gap: 20px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 24px;
+            gap: 24px;
+            padding: 24px 28px;
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 1px 2px rgba(27,36,53,0.04);
-            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+            border-bottom: 1px solid var(--line);
+            transition: background .16s ease;
         }
-        .row:hover {
-            transform: translateX(6px);
-            border-color: var(--border-hover);
-            box-shadow: 0 10px 28px -14px rgba(232,123,0,0.45);
-        }
-        .icon {
+        .doc-row:last-child { border-bottom: none; }
+        .doc-row:hover { background: var(--hover); }
+
+        .num {
             flex: none;
-            width: 50px; height: 50px;
-            border-radius: 12px;
-            display: grid;
-            place-items: center;
-            font-size: 1.5rem;
-            background: rgba(255,153,0,0.10);
-            border: 1px solid var(--border);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+            width: 28px;
         }
-        .body { flex: 1; min-width: 0; }
-        .row-head {
+        .doc-body { flex: 1; min-width: 0; }
+        .doc-row-head {
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
-        .row h2 {
-            font-size: 1.12rem;
+        .doc-row h3 {
+            font-size: 1.08rem;
             font-weight: 700;
+            letter-spacing: -0.01em;
         }
-        .tag {
+        .kind {
             font-size: 0.68rem;
             letter-spacing: 0.06em;
             text-transform: uppercase;
             color: var(--muted);
-            border: 1px solid var(--border);
-            padding: 3px 9px;
-            border-radius: 999px;
+            border: 1px solid var(--line-strong);
+            padding: 2px 8px;
+            border-radius: 4px;
         }
-        .row p {
+        .doc-row p {
             color: var(--muted);
             font-size: 0.92rem;
         }
-        .arrow {
+        .open {
             flex: none;
-            color: var(--accent);
-            font-size: 1.3rem;
-            transition: transform .18s ease;
-        }
-        .row:hover .arrow { transform: translateX(4px); }
-        footer {
-            margin-top: 52px;
-            color: var(--muted);
             font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color .16s ease, gap .16s ease;
         }
-        footer a { color: var(--aws-blue); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-        @media (max-width: 520px) {
-            .row p { display: none; }
+        .doc-row:hover .open { color: var(--accent); gap: 9px; }
+        .open svg { width: 14px; height: 14px; }
+
+        footer {
+            margin-top: 48px;
+            padding-top: 22px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--faint);
+            font-size: 0.82rem;
+        }
+
+        @media (max-width: 680px) {
+            .topbar-inner, .wrap { padding-left: 20px; padding-right: 20px; }
+            .meta { grid-template-columns: 1fr 1fr; }
+            .doc-row { gap: 16px; padding: 20px; }
+            .doc-row p { display: none; }
+            .open span { display: none; }
         }
     </style>
 </head>
 <body>
+    <div class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <span class="org">ODE</span>
+                <span class="div"></span>
+                <span class="doc">모의해킹 결과 보고</span>
+            </div>
+            <span class="conf">대외비 · CONFIDENTIAL</span>
+        </div>
+    </div>
+
     <div class="wrap">
         <header>
-            <span class="badge">AWS Security</span>
-            <h1>AWS <span class="hl">Security</span> Projects</h1>
-            <p class="subtitle">AWS 보안 인프라 · 공격 · 서비스 · 실습을 다루는 프로젝트 모음입니다. 아래 항목을 눌러 각 저장소로 이동하세요.</p>
+            <p class="eyebrow">주요정보통신기반시설 가이드 2026</p>
+            <h1>Web Application 취약점 진단 및 모의침투</h1>
+            <p class="subtitle">「주요정보통신기반시설 가이드 2026」을 기준으로 수행한 웹 애플리케이션 취약점 진단 및 모의침투이다. 발표 자료와 상세 결과 보고서를 아래에서 확인한다.</p>
+
+            <dl class="meta">
+                <div>
+                    <dt>Framework</dt>
+                    <dd>KISA 2026 가이드 준용</dd>
+                </div>
+                <div>
+                    <dt>Scope</dt>
+                    <dd>Web Application · 모의침투</dd>
+                </div>
+                <div>
+                    <dt>Team</dt>
+                    <dd>Team Ode</dd>
+                </div>
+            </dl>
         </header>
 
-        <main class="list">
-            <a class="row" href="https://github.com/protruser/AWS-Security-Infra" target="_blank" rel="noopener">
-                <div class="icon">🏗️</div>
-                <div class="body">
-                    <div class="row-head">
-                        <h2>AWS Security Infra</h2>
-                        <span class="tag">Infra</span>
+        <div class="section-head">
+            <h2>Deliverables</h2>
+            <span class="count">2건</span>
+        </div>
+
+        <div class="docs">
+            <!-- 발표 자료 (Google Slides) -->
+            <a class="doc-row" href="https://docs.google.com/presentation/d/1ca0Qk0G0i_YycxwjF_tDXIyT-8HCxz-yyPVJpayJ3dA/edit?usp=sharing" target="_blank" rel="noopener">
+                <span class="num">01</span>
+                <div class="doc-body">
+                    <div class="doc-row-head">
+                        <h3>발표 자료</h3>
+                        <span class="kind">Slides</span>
                     </div>
-                    <p>보안이 적용된 AWS 인프라 구성과 아키텍처를 다루는 저장소입니다.</p>
+                    <p>모의해킹 결과 보고 발표 슬라이드</p>
                 </div>
-                <span class="arrow">→</span>
+                <span class="open">
+                    <span>열기</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+                </span>
             </a>
 
-            <a class="row" href="https://github.com/protruser/AWS-Security-Attack" target="_blank" rel="noopener">
-                <div class="icon">🎯</div>
-                <div class="body">
-                    <div class="row-head">
-                        <h2>AWS Security Attack</h2>
-                        <span class="tag">Attack</span>
+            <!-- 결과 보고서 (Google Docs) -->
+            <a class="doc-row" href="https://docs.google.com/document/d/1hnzxzDIsmcrcyWQHYb8zE2MUnMNgpAHSH-PWmn34lFM/edit?usp=sharing" target="_blank" rel="noopener">
+                <span class="num">02</span>
+                <div class="doc-body">
+                    <div class="doc-row-head">
+                        <h3>결과 보고서</h3>
+                        <span class="kind">Report</span>
                     </div>
-                    <p>AWS 환경에 대한 공격 기법과 시나리오를 정리한 저장소입니다.</p>
+                    <p>웹 취약점 진단 및 모의침투 상세 결과 보고서</p>
                 </div>
-                <span class="arrow">→</span>
+                <span class="open">
+                    <span>열기</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+                </span>
             </a>
-
-            <a class="row" href="https://github.com/protruser/AWS-Security-Service" target="_blank" rel="noopener">
-                <div class="icon">🛡️</div>
-                <div class="body">
-                    <div class="row-head">
-                        <h2>AWS Security Service</h2>
-                        <span class="tag">Service</span>
-                    </div>
-                    <p>AWS 보안 서비스 활용과 구성 방법을 다루는 저장소입니다.</p>
-                </div>
-                <span class="arrow">→</span>
-            </a>
-
-            <a class="row" href="https://github.com/protruser/AWS-security" target="_blank" rel="noopener">
-                <div class="icon">🔐</div>
-                <div class="body">
-                    <div class="row-head">
-                        <h2>AWS Security</h2>
-                        <span class="tag">Lab</span>
-                    </div>
-                    <p>AWS 보안 전반의 실습과 학습 자료를 모아둔 저장소입니다.</p>
-                </div>
-                <span class="arrow">→</span>
-            </a>
-        </main>
+        </div>
 
         <footer>
-            <p>Maintained by <a href="https://github.com/protruser" target="_blank" rel="noopener">@protruser</a> · Hosted on GitHub Pages</p>
+            <span>Team Ode · 웹 취약점 진단 및 모의침투</span>
+            <span>본 자료는 대외비이며 사전 동의 없이 공유·복제·배포를 금한다.</span>
         </footer>
     </div>
 </body>
